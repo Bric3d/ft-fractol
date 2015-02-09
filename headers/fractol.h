@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:59:52 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/08 17:55:56 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/09 17:50:53 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,15 @@ typedef struct	s_arg
 	short	sizey;
 	short	i;
 	t_x		*x;
-	int		z;
-	int		posx;
-	int		posy;
+	double	z;
+	double	posx;
+	double	posy;
+	int		bpp;
+	void	*img;
+	char	*pimg;
+	int		size_line;
+	int		endian;
+	int		fract;
 }				t_arg;
 
 typedef struct s_pts
@@ -44,8 +50,6 @@ typedef struct s_pts
 	double	x2;
 	double	y1;
 	double	y2;
-	double	zoom_x;
-	double	zoom_y;
 	double	c_r;
 	double	c_i;
 	double	z_r;
