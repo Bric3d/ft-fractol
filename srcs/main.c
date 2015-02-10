@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:49:44 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/09 18:24:13 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/10 19:51:05 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,16 @@ int		mandelbrot(t_arg *arg)
 		y = 0;
 		while (y < arg->sizey)
 		{
-			pts->c_r = 1.5 * (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + (double)arg->posx;
+			pts->c_r = 1 * (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + (double)arg->posx;
             pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + (double)arg->posy; 
-			//pts->c_r = (double)x / pts->zoom_x + pts->x1;
-			//pts->c_i = (double)y / pts->zoom_y + pts->y1;
-			while((pts->z_r*pts->z_r + pts->z_i*pts->z_i) < 4 && pts->i < arg->i)
+			while((pts->z_r*pts->z_r + pts->z_i*pts->z_i) < (double)arg->n && pts->i < arg->i)
 			{
 				tmp = pts->z_r;
 				pts->z_r = pts->z_r*pts->z_r - pts->z_i*pts->z_i + pts->c_r;
 				pts->z_i = 2*pts->z_i*tmp + pts->c_i;
             	pts->i = pts->i+1;
 			}
-			ft_putpxl(arg, x, y, ft_color(pts->i, arg->i));
+			ft_putpxl(arg, x, y, ft_color(pts->i, arg->i, pts, arg));
 			resetpts(pts);
 			y++;
 		}
@@ -104,35 +102,48 @@ void	*wininit(t_arg *arg)
 	return (xinfos);
 }
 
-t_arg	*ft_args(int ac, char **av)
+void	ft_initvar(t_arg *arg)
 {
-	t_arg	*arg;
+	arg->i = 50;
+	if (arg->sizex <= arg->sizey)
+		arg->z = (double)arg->sizex / (double)arg->sizey / 2;
+	else
+		arg->z = (double)arg->sizey / (double)arg->sizex / 2;
+	arg->posy = 0;
+	arg->posx = 0;
+	arg->fract = 1;
+	arg->freq = 1;
+	arg->r = 0.2;
+	arg->g = 0.4;
+	arg->b = 0.8;
+	arg->pretty = 1;
+	arg->n = 8;
+}
+
+t_arg	ft_args(int ac, char **av)
+{
+	t_arg	arg;
 	int		tmp;
 
-	arg = (t_arg *)ft_memallocpp(sizeof(t_arg *), &ft_error);
 	if (ac == 3)
 	{
 		tmp = ft_atoi(av[1]);
 		if (tmp <= 0 || tmp > 2560)
-			ft_error("fractol", 1, "X size"), arg->sizex = 200;
+			ft_error("fractol", 1, "X size"), arg.sizex = 200;
 		else
-			arg->sizex = tmp;
+			arg.sizex = tmp;
 		tmp = ft_atoi(av[2]);
 		if (tmp <= 0 || tmp > 1350)
-			ft_error("fractol", 1, "Y size"), arg->sizey = 200;
+			ft_error("fractol", 1, "Y size"), arg.sizey = 200;
 		else
-			arg->sizey = tmp;
+			arg.sizey = tmp;
 	}
 	else
 	{
-		arg->sizex = 10;
-		arg->sizey = 10;
+		arg.sizex = 200;
+		arg.sizey = 200;
 	}
-	arg->i = 50;
-	arg->z = 0.8;
-	arg->posy = 0;
-	arg->posx = 0;
-	arg->fract = 1;
+	ft_initvar(&arg);
 	return (arg);
 }
 
@@ -144,9 +155,6 @@ void	choosefract(t_arg *arg)
 
 int		ft_putimg(t_arg *arg)
 {
-	//int		(*mandelbot)(struct s_arg *);
-
-	//mandelbot = &mandelbrot;
 	arg->img = mlx_new_image(arg->x->mlx, arg->sizex, arg->sizey);
 	arg->pimg = mlx_get_data_addr(arg->img, &(arg->bpp),
 	&(arg->size_line), &(arg->endian));
@@ -195,26 +203,121 @@ void	selectfrac(int kc, t_arg *arg)
 	ft_putimg(arg);
 }
 
+void	ft_reset(int kc, t_arg *arg)
+{
+	if (kc == 114)
+		ft_initvar(arg);
+	ft_putimg(arg);
+}
+
+void	ft_iterate(int kc, t_arg *arg)
+{
+	if (kc == 65455)
+		arg->i = arg->i - 1;
+	if (kc == 65450)
+		arg->i = arg->i + 1;
+	ft_putimg(arg);
+}
+
+void	ft_zoom(int kc, t_arg *arg)
+{
+	if (kc == 45 || kc == 65453)
+	{
+		arg->i--;
+		arg->z /= 1.5;
+	}
+	if ((kc == 61 || kc == 65451) && arg->z * 1.5 < 220076276500268)
+	{
+		arg->i++;
+		arg->z *= 1.5;
+	}
+	ft_putimg(arg);
+}
+
+void	ft_putdouble(double n, short size)
+{
+	int		tmp;
+	short	i;
+
+	if (size > 18)
+		size = 18;
+	i = 0;
+	if ((int)n == 0 && n < 0)
+		ft_putchar('-');
+	ft_putnbr((int)n);
+	if ((int)n != n)
+		ft_putchar(',');
+	tmp = (int)n;
+	n = n - (double)tmp;
+	while (i < 19)
+	{
+		n = n * 10;
+		tmp = (int)n;
+		n = n - (double)tmp;
+		if (tmp < 0)
+			tmp = -tmp;
+		ft_putchar('0' + tmp);
+		i++;
+	}
+}
+
+void	ft_changergb(int kc, t_arg *arg)
+{
+	if (kc == 65463)
+		arg->r = arg->r - 0.1;
+	if (kc == 65465)
+		arg->r = arg->r + 0.1;
+	if (kc == 65460)
+		arg->g = arg->g - 0.1;
+	if (kc == 65462)
+		arg->g = arg->g + 0.1;
+	if (kc == 65457)
+		arg->b = arg->b - 0.1;
+	if (kc == 65459)
+		arg->b = arg->b + 0.1;
+	ft_putstr("R :");
+	ft_putdouble(arg->r, 6);
+	ft_putstr("\nG :");
+	ft_putdouble(arg->g, 6);
+	ft_putstr("\nB :");
+	ft_putdouble(arg->b, 6);
+	ft_putstr("\n");
+	ft_putimg(arg);
+}
+
+void	ft_changetar(int kc, t_arg *arg)
+{
+	if (kc == 65365)
+		arg->n = arg->n + 1;
+	if (kc == 65366 && arg->n > 3)
+		arg->n = arg->n - 1;
+	if (kc == 112)
+	{
+		if (arg->pretty == 1) 
+			arg->pretty = 0;
+		else
+			arg->pretty = 1;
+	}
+	if (arg->n > 3)
+		ft_putimg(arg);
+}
+
 int		ft_key_hook(int kc, t_arg *arg)
 {
-	if ((kc == 45 || kc == 61 || kc == 65453|| kc == 65451) && arg->i >= 8)
-	{
-		if (kc == 45 || kc == 65453)
-		{
-			arg->i--;
-			arg->z /= 1.5;
-		}
-		if (kc == 61 || kc == 65451)
-		{
-			arg->i++;
-			arg->z *= 1.5;
-		}
-		ft_putimg(arg);
-	}
+	if (kc == 45 || kc == 61 || kc == 65453|| kc == 65451)
+		ft_zoom(kc, arg);
 	if (kc == 49 || kc == 50 || kc == 51 || kc == 52 || kc == 53 || kc == 54 || kc == 55 || kc == 56 || kc == 57)
 		selectfrac(kc, arg);
 	if (kc == 65362 || kc == 65364 || kc == 65361 || kc == 65363)
 		ft_move(kc, arg);
+	if (kc == 114)
+		ft_reset(kc, arg);
+	if (kc == 65463 || kc == 65465 || kc == 65460 || kc == 65462 || kc == 65457 || kc == 65459)
+		ft_changergb(kc, arg);
+	if (kc == 65455 || kc == 65450)
+		ft_iterate(kc, arg);
+	if (kc == 65365 || kc == 65366 || kc == 112)
+		ft_changetar(kc, arg);
 	if (kc == 65307)
 		exit (0);
 	return (0);
@@ -222,13 +325,13 @@ int		ft_key_hook(int kc, t_arg *arg)
 
 int		main(int ac, char **av)
 {
-	t_arg	*arg;
+	t_arg	arg;
 
 	arg = ft_args(ac, av);
-	arg->x = wininit(arg);
-	ft_putimg(arg);
-	mlx_key_hook(arg->x->win, ft_key_hook, arg);
-	mlx_expose_hook(arg->x->win, ft_putimg, arg);
-	mlx_loop(arg->x->mlx);
+	arg.x = wininit(&arg);
+	ft_putimg(&arg);
+	mlx_key_hook(arg.x->win, ft_key_hook, &arg);
+	mlx_expose_hook(arg.x->win, ft_putimg, &arg);
+	mlx_loop(arg.x->mlx);
 	return (0);
 }

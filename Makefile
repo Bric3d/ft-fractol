@@ -6,7 +6,7 @@
 #    By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/08 15:08:34 by bbecker           #+#    #+#              #
-#    Updated: 2015/02/07 18:52:49 by bbecker          ###   ########.fr        #
+#    Updated: 2015/02/10 19:35:03 by bbecker          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,14 @@ fclean: clean
 re: fclean all
 
 help:
-	@echo "Compile with all\nUsage : ./fractol X Y\nMax X = 2560\nMax Y = 1350"
+	@echo "--------------------\n\n\
+	Compile with all\nUsage : ./fractol X Y\n\
+	Max X = 2560\nMax Y = 1350\n\
+	\n--------------------\n\n\
+	Zoom with |+| and |-|\n\
+	Toogle smoothing with |page up|, |page down| and |P|\nR G and B can be\
+	 choosed with the pad\nChoose the fractals with |1| to |9|\n\
+	Toogle precise tuning of values with |home| and |end|\n\
+	 \n--------------------"
 
 .PHONY: fclean clean all test help

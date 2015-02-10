@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:59:52 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/09 17:50:53 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/10 17:11:57 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+# ifndef M_PI
+#  define M_PI 3.14159265358979323846
+# endif
 
 typedef struct s_x
 {
@@ -29,19 +32,25 @@ typedef struct s_x
 
 typedef struct	s_arg
 {
-	short	sizex;
-	short	sizey;
-	short	i;
-	t_x		*x;
-	double	z;
-	double	posx;
-	double	posy;
-	int		bpp;
-	void	*img;
-	char	*pimg;
-	int		size_line;
-	int		endian;
-	int		fract;
+	short			sizex;
+	short			sizey;
+	unsigned int	i;
+	t_x				*x;
+	double			z;
+	double			posx;
+	double			posy;
+	int				bpp;
+	void			*img;
+	char			*pimg;
+	int				size_line;
+	int				endian;
+	int				fract;
+	double			freq;
+	double			r;
+	double			g;
+	double			b;
+	short			pretty;
+	short			n;
 }				t_arg;
 
 typedef struct s_pts
@@ -67,6 +76,6 @@ void	ft_error(char *name, int error, char *cause);
  *	color.c
  */
 
-int		ft_color(double i, int max);
+int		ft_color(double i, int max, t_pts *pts, t_arg *arg);
 
 #endif
