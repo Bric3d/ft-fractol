@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:59:52 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/10 17:11:57 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/11 15:06:05 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,29 @@ typedef struct s_pts
 }				t_pts;
 
 /*
+ *	fractals.c
+ */
+
+double	mandelbrot(t_arg *arg, t_pts *pts, double x, double y);
+double	burning_ship(t_arg *arg, t_pts *pts, double x, double y);
+double	special1(t_arg *arg, t_pts *pts, double x, double y);
+
+/*
  *	error.c
  */
 
 void	ft_error(char *name, int error, char *cause);
 
 /*
+ *	tools.c
+ */
+
+double	choosefract(t_arg arg, t_pts pts, double x, double y);
+
+/*
  *	color.c
  */
 
-int		ft_color(double i, int max, t_pts *pts, t_arg *arg);
+int		ft_color(double i, int max, t_arg arg);
 
 #endif

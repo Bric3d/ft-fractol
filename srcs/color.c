@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 18:05:49 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/10 16:58:07 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/11 17:31:03 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,14 @@ int	color_scale(double d, t_arg *arg)
 }
 
 
-int	ft_color(double x, int max, t_pts *pts, t_arg *arg)
+int	ft_color(double x, int max, t_arg arg)
 {
-	if (x < 0 || x >= max)
+	max = max - 1;
+	if (x >= max)
 		return (0);
-	if (arg->pretty == 1)
-		x = (double)x + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+	if (x <= 0)
+		x = 0.1; 
 	x = ((int)x % 20) + (x - (int)x);
 	x /= 20;
-	return (color_scale(x, arg));
+	return (color_scale(x, &arg));
 }

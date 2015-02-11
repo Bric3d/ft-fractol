@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:49:44 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/10 19:51:05 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/11 17:16:40 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,12 @@ void	ft_putpxl(t_arg *arg, int x, int y, int color)
 	arg->pimg[i + 2] = (color & 0xFF0000) >> 16;
 }
 
-int		mandelbrot(t_arg *arg)
+int		fractbase(t_arg *arg)
 {
 	t_pts	*pts;
 	double	x;
 	double	y;
-	double	tmp;
+	double	i;
 
 	x = 0;
 	pts = ft_pts();
@@ -62,17 +62,8 @@ int		mandelbrot(t_arg *arg)
 		y = 0;
 		while (y < arg->sizey)
 		{
-			pts->c_r = 1 * (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + (double)arg->posx;
-            pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + (double)arg->posy; 
-			while((pts->z_r*pts->z_r + pts->z_i*pts->z_i) < (double)arg->n && pts->i < arg->i)
-			{
-				tmp = pts->z_r;
-				pts->z_r = pts->z_r*pts->z_r - pts->z_i*pts->z_i + pts->c_r;
-				pts->z_i = 2*pts->z_i*tmp + pts->c_i;
-            	pts->i = pts->i+1;
-			}
-			ft_putpxl(arg, x, y, ft_color(pts->i, arg->i, pts, arg));
-			resetpts(pts);
+			i = choosefract(*arg, *pts, x, y);
+			ft_putpxl(arg, x, y, ft_color(i, arg->i, *arg));
 			y++;
 		}
 		x++;
@@ -111,7 +102,6 @@ void	ft_initvar(t_arg *arg)
 		arg->z = (double)arg->sizey / (double)arg->sizex / 2;
 	arg->posy = 0;
 	arg->posx = 0;
-	arg->fract = 1;
 	arg->freq = 1;
 	arg->r = 0.2;
 	arg->g = 0.4;
@@ -120,37 +110,60 @@ void	ft_initvar(t_arg *arg)
 	arg->n = 8;
 }
 
-t_arg	ft_args(int ac, char **av)
+void	ft_size(int ac, char **av, t_arg *arg)
 {
-	t_arg	arg;
-	int		tmp;
+	int		tmp1;
+	int		tmp2;
 
-	if (ac == 3)
+	if (ac == 4)
 	{
-		tmp = ft_atoi(av[1]);
-		if (tmp <= 0 || tmp > 2560)
-			ft_error("fractol", 1, "X size"), arg.sizex = 200;
+		tmp1 = ft_atoi(av[2]);
+		tmp2 = ft_atoi(av[3]);
+	}
+	if (ac == 4 || (ac == 3 && (tmp1 = ft_atoi(av[1])) > 0 && (tmp2 = ft_atoi(av[2])) > 0))
+	{
+		if (tmp1 <= 0 || tmp1 > 2560)
+			ft_error("fractol", 1, "X size"), arg->sizex = 200;
 		else
-			arg.sizex = tmp;
-		tmp = ft_atoi(av[2]);
-		if (tmp <= 0 || tmp > 1350)
-			ft_error("fractol", 1, "Y size"), arg.sizey = 200;
+			arg->sizex = tmp1;
+		
+		if (tmp2 <= 0 || tmp2 > 1350)
+			ft_error("fractol", 1, "Y size"), arg->sizey = 200;
 		else
-			arg.sizey = tmp;
+			arg->sizey = tmp2;
 	}
 	else
 	{
-		arg.sizex = 200;
-		arg.sizey = 200;
+		arg->sizex = 200;
+		arg->sizey = 200;
 	}
-	ft_initvar(&arg);
-	return (arg);
 }
 
-void	choosefract(t_arg *arg)
+void	ft_fracarg(int ac, char **av, t_arg *arg)
 {
-	if (arg->fract == 1)
-		mandelbrot(arg);
+	char *tmp;
+
+	tmp = NULL;
+	if (ac == 2 || ac == 4)
+		tmp = av[1];
+	if (ft_strcmp(tmp, "mandelbrot") == 0)
+		arg->fract = 1;
+	else if (ft_strcmp(tmp, "burning_ship") == 0)
+		arg->fract = 2;
+	else if (ft_strcmp(tmp, "special1") == 0)
+		arg->fract = 9;
+	else
+		arg->fract = 1;
+}
+
+t_arg	ft_args(int ac, char **av)
+{
+	t_arg	arg;
+
+	ft_size(ac, av, &arg);
+	ft_fracarg(ac, av, &arg);
+	ft_initvar(&arg);
+	return (arg);
 }
 
 int		ft_putimg(t_arg *arg)
@@ -158,7 +171,7 @@ int		ft_putimg(t_arg *arg)
 	arg->img = mlx_new_image(arg->x->mlx, arg->sizex, arg->sizey);
 	arg->pimg = mlx_get_data_addr(arg->img, &(arg->bpp),
 	&(arg->size_line), &(arg->endian));
-	choosefract(arg);
+	fractbase(arg);
 	mlx_put_image_to_window(arg->x->mlx, arg->x->win, arg->img, 0, 0);
 	mlx_destroy_image(arg->x->mlx, arg->img);
 	return (0);
@@ -221,7 +234,7 @@ void	ft_iterate(int kc, t_arg *arg)
 
 void	ft_zoom(int kc, t_arg *arg)
 {
-	if (kc == 45 || kc == 65453)
+	if ((kc == 45 || kc == 65453) && arg->i > 1 && arg->z > 0)
 	{
 		arg->i--;
 		arg->z /= 1.5;
@@ -263,25 +276,25 @@ void	ft_putdouble(double n, short size)
 
 void	ft_changergb(int kc, t_arg *arg)
 {
-	if (kc == 65463)
+	if (kc == 65465 && arg->r >= 0.1)
 		arg->r = arg->r - 0.1;
-	if (kc == 65465)
+	if (kc == 65463 && arg->r <= 0.9)
 		arg->r = arg->r + 0.1;
-	if (kc == 65460)
+	if (kc == 65462 && arg->g >= 0.1)
 		arg->g = arg->g - 0.1;
-	if (kc == 65462)
+	if (kc == 65460 && arg->g <= 0.9)
 		arg->g = arg->g + 0.1;
-	if (kc == 65457)
+	if (kc == 65459 && arg->b >= 0.1)
 		arg->b = arg->b - 0.1;
-	if (kc == 65459)
+	if (kc == 65457 && arg->b <= 0.9)
 		arg->b = arg->b + 0.1;
-	ft_putstr("R :");
-	ft_putdouble(arg->r, 6);
-	ft_putstr("\nG :");
-	ft_putdouble(arg->g, 6);
-	ft_putstr("\nB :");
-	ft_putdouble(arg->b, 6);
-	ft_putstr("\n");
+	ft_putstr("\r                                \rR :");
+	ft_putnbr(100 - (int)(arg->r * 100));
+	ft_putstr("%  G :");
+	ft_putnbr(100 - (int)(arg->g * 100));
+	ft_putstr("%  B :");
+	ft_putnbr(100 - (int)(arg->b * 100));
+	ft_putstr("%");
 	ft_putimg(arg);
 }
 
@@ -319,7 +332,10 @@ int		ft_key_hook(int kc, t_arg *arg)
 	if (kc == 65365 || kc == 65366 || kc == 112)
 		ft_changetar(kc, arg);
 	if (kc == 65307)
+	{
+		ft_putchar('\n');
 		exit (0);
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 #    By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/08 15:08:34 by bbecker           #+#    #+#              #
-#    Updated: 2015/02/10 19:35:03 by bbecker          ###   ########.fr        #
+#    Updated: 2015/02/11 17:04:46 by bbecker          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,15 @@ L = -L./lib -lft -L /usr/X11/lib -lmlx -lXext -lX11
 
 TOMAKE =	$(F)main.c					\
 			$(F)color.c					\
+			$(F)tools.c					\
+			$(F)fractals.c				\
 			$(F)error.c
 
 
 TOLIB	=	main.o						\
 			error.o						\
+			fractals.o					\
+			tools.o						\
 			color.o
 
 all: $(NAME)
