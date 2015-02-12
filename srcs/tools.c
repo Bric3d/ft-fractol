@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/11 11:08:41 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/11 15:06:04 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/12 13:03:21 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ double	choosefract(t_arg arg, t_pts pts, double x, double y)
 		i = mandelbrot(&arg, &pts, x, y);
 	if (arg.fract == 2)
 		i = burning_ship(&arg, &pts, x, y);
+	if (arg.fract == 3)
+		i = julia(&arg, &pts, x, y);
+	if (arg.fract == 4)
+		i = julia2(&arg, &pts, x, y);
+	if (arg.fract == 5)
+		i = carpet(x, y);
 	if (arg.fract == 9)
 		i = special1(&arg, &pts, x, y);
 	return (i);

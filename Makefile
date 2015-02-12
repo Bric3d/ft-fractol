@@ -6,7 +6,7 @@
 #    By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/08 15:08:34 by bbecker           #+#    #+#              #
-#    Updated: 2015/02/11 17:04:46 by bbecker          ###   ########.fr        #
+#    Updated: 2015/02/12 16:18:17 by bbecker          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,14 +21,20 @@ L = -L./lib -lft -L /usr/X11/lib -lmlx -lXext -lX11
 TOMAKE =	$(F)main.c					\
 			$(F)color.c					\
 			$(F)tools.c					\
+			$(F)random.c				\
 			$(F)fractals.c				\
+			$(F)fractals2.c				\
+			$(F)mouse_hook.c			\
 			$(F)error.c
 
 
 TOLIB	=	main.o						\
 			error.o						\
 			fractals.o					\
+			fractals2.o					\
 			tools.o						\
+			random.o					\
+			mouse_hook.o				\
 			color.o
 
 all: $(NAME)
@@ -70,6 +76,8 @@ help:
 	Toogle smoothing with |page up|, |page down| and |P|\nR G and B can be\
 	 choosed with the pad\nChoose the fractals with |1| to |9|\n\
 	Toogle precise tuning of values with |home| and |end|\n\
+	Turn mouse on and off with |m|\n\
+	Generate a random color with |space|\n\
 	 \n--------------------"
 
-.PHONY: fclean clean all test help
+.PHONY: fclean clean all test helpc

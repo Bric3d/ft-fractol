@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:59:52 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/11 15:06:05 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/12 16:37:48 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,10 @@ typedef struct	s_arg
 	double			b;
 	short			pretty;
 	short			n;
+	double			const1;
+	double			const2;
+	short			mouse;
+	double			prec;
 }				t_arg;
 
 typedef struct s_pts
@@ -73,6 +77,14 @@ typedef struct s_pts
 double	mandelbrot(t_arg *arg, t_pts *pts, double x, double y);
 double	burning_ship(t_arg *arg, t_pts *pts, double x, double y);
 double	special1(t_arg *arg, t_pts *pts, double x, double y);
+double	julia(t_arg *arg, t_pts *pts, double x, double y);
+double	julia2(t_arg *arg, t_pts *pts, double x, double y);
+
+/*
+ *	fractals2.c
+ */
+
+double	carpet(int x, int y);
 
 /*
  *	error.c
@@ -91,5 +103,24 @@ double	choosefract(t_arg arg, t_pts pts, double x, double y);
  */
 
 int		ft_color(double i, int max, t_arg arg);
+
+/*
+ *	random.c
+ */
+
+void	randomcolor(int kc, t_arg *arg);
+void	printrgb(t_arg *arg);
+
+/*
+ *	mouse_hook.c
+ */
+
+int	motion_hook(int x, int y, t_arg *arg);
+
+/*
+ *	putimg.c
+ */
+
+int		ft_putimg(t_arg *arg);
 
 #endif

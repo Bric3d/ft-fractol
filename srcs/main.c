@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:49:44 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/11 17:16:40 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/12 16:46:18 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	ft_initvar(t_arg *arg)
 	arg->b = 0.8;
 	arg->pretty = 1;
 	arg->n = 8;
+	arg->prec = 1;
 }
 
 void	ft_size(int ac, char **av, t_arg *arg)
@@ -150,6 +151,10 @@ void	ft_fracarg(int ac, char **av, t_arg *arg)
 		arg->fract = 1;
 	else if (ft_strcmp(tmp, "burning_ship") == 0)
 		arg->fract = 2;
+	else if (ft_strcmp(tmp, "julia") == 0)
+		arg->fract = 3;
+	else if (ft_strcmp(tmp, "julia2") == 0)
+		arg->fract = 4;
 	else if (ft_strcmp(tmp, "special1") == 0)
 		arg->fract = 9;
 	else
@@ -163,6 +168,7 @@ t_arg	ft_args(int ac, char **av)
 	ft_size(ac, av, &arg);
 	ft_fracarg(ac, av, &arg);
 	ft_initvar(&arg);
+	arg.mouse = 1;
 	return (arg);
 }
 
@@ -219,8 +225,10 @@ void	selectfrac(int kc, t_arg *arg)
 void	ft_reset(int kc, t_arg *arg)
 {
 	if (kc == 114)
+	{
 		ft_initvar(arg);
-	ft_putimg(arg);
+		ft_putimg(arg);
+	}
 }
 
 void	ft_iterate(int kc, t_arg *arg)
@@ -276,25 +284,19 @@ void	ft_putdouble(double n, short size)
 
 void	ft_changergb(int kc, t_arg *arg)
 {
-	if (kc == 65465 && arg->r >= 0.1)
-		arg->r = arg->r - 0.1;
-	if (kc == 65463 && arg->r <= 0.9)
-		arg->r = arg->r + 0.1;
-	if (kc == 65462 && arg->g >= 0.1)
-		arg->g = arg->g - 0.1;
-	if (kc == 65460 && arg->g <= 0.9)
-		arg->g = arg->g + 0.1;
-	if (kc == 65459 && arg->b >= 0.1)
-		arg->b = arg->b - 0.1;
-	if (kc == 65457 && arg->b <= 0.9)
-		arg->b = arg->b + 0.1;
-	ft_putstr("\r                                \rR :");
-	ft_putnbr(100 - (int)(arg->r * 100));
-	ft_putstr("%  G :");
-	ft_putnbr(100 - (int)(arg->g * 100));
-	ft_putstr("%  B :");
-	ft_putnbr(100 - (int)(arg->b * 100));
-	ft_putstr("%");
+	if (kc == 65465 && arg->r - 0.1 * arg->prec >= 0)
+		arg->r = arg->r - 0.1 * arg->prec;
+	if (kc == 65463 && arg->r + 0.1 * arg->prec <= 1)
+		arg->r = arg->r + 0.1 * arg->prec;
+	if (kc == 65462 && arg->g - 0.1 * arg->prec >= 0)
+		arg->g = arg->g - 0.1 * arg->prec;
+	if (kc == 65460 && arg->g + 0.1 * arg->prec <= 1)
+		arg->g = arg->g + 0.1 * arg->prec;
+	if (kc == 65459 && arg->b - 0.1 * arg->prec >= 0)
+		arg->b = arg->b - 0.1 * arg->prec;
+	if (kc == 65457 && arg->b + 0.1 * arg->prec <= 1)
+		arg->b = arg->b + 0.1 * arg->prec;
+	printrgb(arg);
 	ft_putimg(arg);
 }
 
@@ -311,8 +313,24 @@ void	ft_changetar(int kc, t_arg *arg)
 		else
 			arg->pretty = 1;
 	}
-	if (arg->n > 3)
+	if (kc == 109 && (arg->fract == 3 || arg->fract == 4))
+	{
+		if (arg->mouse == 1) 
+			arg->mouse = 0;
+		else
+			arg->mouse = 1;
+	}
+	if (arg->n > 3 && kc != 109)
 		ft_putimg(arg);
+}
+
+void	ft_toogleprecision(int kc, t_arg *arg)
+{
+	if (kc == 65360)
+		arg->prec = 0.1;
+	if (kc == 65367)
+		arg->prec = 1;
+
 }
 
 int		ft_key_hook(int kc, t_arg *arg)
@@ -329,8 +347,12 @@ int		ft_key_hook(int kc, t_arg *arg)
 		ft_changergb(kc, arg);
 	if (kc == 65455 || kc == 65450)
 		ft_iterate(kc, arg);
-	if (kc == 65365 || kc == 65366 || kc == 112)
+	if (kc == 65365 || kc == 65366 || kc == 112 || kc == 109)
 		ft_changetar(kc, arg);
+	if (kc == 32)
+		randomcolor(kc, arg);
+	if (kc == 65360 || kc == 65367)
+		ft_toogleprecision(kc, arg);
 	if (kc == 65307)
 	{
 		ft_putchar('\n');
@@ -348,6 +370,7 @@ int		main(int ac, char **av)
 	ft_putimg(&arg);
 	mlx_key_hook(arg.x->win, ft_key_hook, &arg);
 	mlx_expose_hook(arg.x->win, ft_putimg, &arg);
+	mlx_hook(arg.x->win, 6, 64, motion_hook, &arg);
 	mlx_loop(arg.x->mlx);
 	return (0);
 }
