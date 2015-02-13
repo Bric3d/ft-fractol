@@ -6,7 +6,7 @@
 #    By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/08 15:08:34 by bbecker           #+#    #+#              #
-#    Updated: 2015/02/12 16:18:17 by bbecker          ###   ########.fr        #
+#    Updated: 2015/02/13 16:36:25 by bbecker          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,4 +80,4 @@ help:
 	Generate a random color with |space|\n\
 	 \n--------------------"
 
-.PHONY: fclean clean all test helpc
+.PHONY: fclean clean all test help

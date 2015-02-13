@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:49:44 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/12 16:46:18 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/13 17:30:08 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	*wininit(t_arg *arg)
 
 void	ft_initvar(t_arg *arg)
 {
-	arg->i = 50;
+	arg->i = 100;
 	if (arg->sizex <= arg->sizey)
 		arg->z = (double)arg->sizex / (double)arg->sizey / 2;
 	else
@@ -155,6 +155,8 @@ void	ft_fracarg(int ac, char **av, t_arg *arg)
 		arg->fract = 3;
 	else if (ft_strcmp(tmp, "julia2") == 0)
 		arg->fract = 4;
+	else if (ft_strcmp(tmp, "carpet") == 0)
+		arg->fract = 5;
 	else if (ft_strcmp(tmp, "special1") == 0)
 		arg->fract = 9;
 	else
@@ -233,10 +235,17 @@ void	ft_reset(int kc, t_arg *arg)
 
 void	ft_iterate(int kc, t_arg *arg)
 {
-	if (kc == 65455)
-		arg->i = arg->i - 1;
-	if (kc == 65450)
-		arg->i = arg->i + 1;
+	int i;
+	int j;
+
+	i = (int)arg->prec;
+	if (i < 1)
+		i = 1;
+	if (kc == 65455 && (j = arg->i - 1 * i) >= 3)
+		arg->i = j;
+	if (kc == 65450 && (j = arg->i + 1 * i) <= 10000)
+		arg->i = j;
+	printrgb(arg);
 	ft_putimg(arg);
 }
 
@@ -244,60 +253,50 @@ void	ft_zoom(int kc, t_arg *arg)
 {
 	if ((kc == 45 || kc == 65453) && arg->i > 1 && arg->z > 0)
 	{
-		arg->i--;
+		arg->i -= 2;
 		arg->z /= 1.5;
 	}
 	if ((kc == 61 || kc == 65451) && arg->z * 1.5 < 220076276500268)
 	{
-		arg->i++;
+		arg->i += 2;
 		arg->z *= 1.5;
 	}
 	ft_putimg(arg);
 }
 
-void	ft_putdouble(double n, short size)
+static void ft_changergb2(t_arg *arg)
 {
-	int		tmp;
-	short	i;
-
-	if (size > 18)
-		size = 18;
-	i = 0;
-	if ((int)n == 0 && n < 0)
-		ft_putchar('-');
-	ft_putnbr((int)n);
-	if ((int)n != n)
-		ft_putchar(',');
-	tmp = (int)n;
-	n = n - (double)tmp;
-	while (i < 19)
-	{
-		n = n * 10;
-		tmp = (int)n;
-		n = n - (double)tmp;
-		if (tmp < 0)
-			tmp = -tmp;
-		ft_putchar('0' + tmp);
-		i++;
-	}
+	printrgb(arg);
+	ft_putimg(arg);
 }
 
 void	ft_changergb(int kc, t_arg *arg)
 {
 	if (kc == 65465 && arg->r - 0.1 * arg->prec >= 0)
 		arg->r = arg->r - 0.1 * arg->prec;
+	else if (kc == 65465)
+		arg->r = 0;
 	if (kc == 65463 && arg->r + 0.1 * arg->prec <= 1)
 		arg->r = arg->r + 0.1 * arg->prec;
+	else if (kc == 65463)
+		arg->r = 1;
 	if (kc == 65462 && arg->g - 0.1 * arg->prec >= 0)
 		arg->g = arg->g - 0.1 * arg->prec;
+	else if (kc == 65462)
+		arg->g = 0;
 	if (kc == 65460 && arg->g + 0.1 * arg->prec <= 1)
 		arg->g = arg->g + 0.1 * arg->prec;
+	else if (kc == 65460)
+		arg->g = 1;
 	if (kc == 65459 && arg->b - 0.1 * arg->prec >= 0)
 		arg->b = arg->b - 0.1 * arg->prec;
+	else if (kc == 65459)
+		arg->b = 0;
 	if (kc == 65457 && arg->b + 0.1 * arg->prec <= 1)
 		arg->b = arg->b + 0.1 * arg->prec;
-	printrgb(arg);
-	ft_putimg(arg);
+	else if (kc == 65457)
+		arg->b = 1;
+	ft_changergb2(arg);
 }
 
 void	ft_changetar(int kc, t_arg *arg)
@@ -326,11 +325,11 @@ void	ft_changetar(int kc, t_arg *arg)
 
 void	ft_toogleprecision(int kc, t_arg *arg)
 {
-	if (kc == 65360)
-		arg->prec = 0.1;
-	if (kc == 65367)
-		arg->prec = 1;
-
+	if (kc == 65360 && arg->prec / 10 >= 0.0001)
+		arg->prec = arg->prec / 10;
+	if (kc == 65367 && arg->prec * 10 <= 10000)
+		arg->prec = arg->prec * 10;
+	printrgb(arg);
 }
 
 int		ft_key_hook(int kc, t_arg *arg)
@@ -354,10 +353,7 @@ int		ft_key_hook(int kc, t_arg *arg)
 	if (kc == 65360 || kc == 65367)
 		ft_toogleprecision(kc, arg);
 	if (kc == 65307)
-	{
-		ft_putchar('\n');
 		exit (0);
-	}
 	return (0);
 }
 
@@ -370,6 +366,8 @@ int		main(int ac, char **av)
 	ft_putimg(&arg);
 	mlx_key_hook(arg.x->win, ft_key_hook, &arg);
 	mlx_expose_hook(arg.x->win, ft_putimg, &arg);
+	mlx_hook(arg.x->win, 4, 5, mouse_hook, &arg);
+	mlx_hook(arg.x->win, 1, 1, ft_key_hook, &arg);
 	mlx_hook(arg.x->win, 6, 64, motion_hook, &arg);
 	mlx_loop(arg.x->mlx);
 	return (0);

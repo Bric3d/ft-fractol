@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 12:59:52 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/12 16:37:48 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/13 16:15:37 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ void	printrgb(t_arg *arg);
  */
 
 int	motion_hook(int x, int y, t_arg *arg);
+int mouse_hook(int button, int x, int y, t_arg *arg);
 
 /*
  *	putimg.c
