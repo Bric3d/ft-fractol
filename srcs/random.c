@@ -6,12 +6,11 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/12 16:12:09 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/13 15:42:11 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/15 13:41:27 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
 
 static double	choose(int nu1, int nu2)
 {
@@ -23,30 +22,28 @@ static double	choose(int nu1, int nu2)
 
 void			randomcolor(int kc, t_arg *arg)
 {
-	int r1;
-	int r2;
-	int g1;
-	int g2;
-	int b1;
-	int b2;
+	int var1;
+	int var2;
 
 	if (kc == 32)
 	{
-		r1 = rand();
-		r2 = rand();
-		g1 = rand();
-		g2 = rand();
-		b1 = rand();
-		b2 = rand();
-		arg->r = (choose(r1, r2));
-		arg->g = (choose(g1, g2));
-		arg->b = (choose(b1, b2));
+		var1 = rand();
+		var2 = rand();
+		arg->r = (choose(var1, var2));
+		var1 = rand();
+		var2 = rand();
+		arg->g = (choose(var1, var2));
+		var1 = rand();
+		var2 = rand();
+		arg->b = (choose(var1, var2));
+		var1 = rand();
+		var2 = rand();
 		printrgb(arg);
 		ft_putimg(arg);
 	}
 }
 
-void	printrgb(t_arg *arg)
+void			printrgb(t_arg *arg)
 {
 	ft_putstr("                                                     \r R :");
 	ft_putnbr(100 - (int)(arg->r * 100));

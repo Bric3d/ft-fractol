@@ -6,13 +6,13 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/12 10:46:05 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/13 18:43:47 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/15 13:55:06 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int	motion_hook(int x, int y, t_arg *arg)
+int			motion_hook(int x, int y, t_arg *arg)
 {
 	if ((arg->fract == 3 || arg->fract == 4) && arg->mouse == 1)
 	{
@@ -47,12 +47,10 @@ static void	mousezoom(int button, int x, int y, t_arg *arg)
 	ft_putimg(arg);
 }
 
-
-int mouse_hook(int button, int x, int y, t_arg *arg)
+int			mouse_hook(int button, int x, int y, t_arg *arg)
 {
 	(void)x;
 	(void)y;
-
 	if (button != 1 && button != 3)
 		randomcolor(32, arg);
 	if (button == 1 || button == 3)

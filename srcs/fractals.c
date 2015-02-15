@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/11 11:11:08 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/12 11:42:47 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/15 13:53:39 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,21 @@ double	mandelbrot(t_arg *arg, t_pts *pts, double x, double y)
 	double	tmp;
 	double	i;
 
-	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posx;
-    pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posy; 
-	while((pts->z_r*pts->z_r + pts->z_i*pts->z_i) < (double)arg->n && pts->i < arg->i)
+	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posx;
+	pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posy;
+	while ((pts->z_r * pts->z_r + pts->z_i * pts->z_i) < (double)arg->n
+		&& pts->i < arg->i)
 	{
 		tmp = pts->z_r;
-		pts->z_r = pts->z_r*pts->z_r - pts->z_i*pts->z_i + pts->c_r;
-		pts->z_i = 2*pts->z_i*tmp + pts->c_i;
-    	pts->i = pts->i+1;
+		pts->z_r = pts->z_r * pts->z_r - pts->z_i * pts->z_i + pts->c_r;
+		pts->z_i = 2 * pts->z_i * tmp + pts->c_i;
+		pts->i = pts->i + 1;
 	}
 	if (arg->pretty == 1)
-		i = (double)pts->i + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+		i = (double)pts->i + 1.0
+		- log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
 	else
 		i = pts->i;
 	return (i);
@@ -39,8 +43,10 @@ double	burning_ship(t_arg *arg, t_pts *pts, double x, double y)
 	double	tmp2;
 	double	i;
 
-	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posx;
-    pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posy; 
+	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posx;
+	pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posy;
 	while (pts->i < arg->i)
 	{
 		tmp1 = pts->z_r * pts->z_r - pts->z_i * pts->z_i - pts->c_r;
@@ -52,7 +58,8 @@ double	burning_ship(t_arg *arg, t_pts *pts, double x, double y)
 			break ;
 	}
 	if (arg->pretty == 1)
-		i = (double)pts->i + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+		i = (double)pts->i + 1.0
+		- log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
 	else
 		i = pts->i;
 	return (i);
@@ -64,8 +71,10 @@ double	julia(t_arg *arg, t_pts *pts, double x, double y)
 	double	tmp2;
 	double	i;
 
-	pts->z_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posx;
-	pts->z_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posy;
+	pts->z_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posx;
+	pts->z_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posy;
 	while (pts->i < arg->i)
 	{
 		tmp1 = pts->z_r * pts->z_r - pts->z_i * pts->z_i + arg->const1;
@@ -77,7 +86,8 @@ double	julia(t_arg *arg, t_pts *pts, double x, double y)
 			break ;
 	}
 	if (arg->pretty == 1)
-		i = (double)pts->i + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+		i = (double)pts->i + 1.0
+		- log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
 	else
 		i = pts->i;
 	return (i);
@@ -89,8 +99,10 @@ double	julia2(t_arg *arg, t_pts *pts, double x, double y)
 	double	tmp2;
 	double	i;
 
-	pts->z_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posx;
-	pts->z_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posy;
+	pts->z_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posx;
+	pts->z_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posy;
 	while (pts->i < arg->i)
 	{
 		tmp1 = pts->z_r * pts->z_r - pts->z_i * pts->z_i + arg->const1;
@@ -102,7 +114,8 @@ double	julia2(t_arg *arg, t_pts *pts, double x, double y)
 			break ;
 	}
 	if (arg->pretty == 1)
-		i = (double)pts->i + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+		i = (double)pts->i + 1.0
+		- log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
 	else
 		i = pts->i;
 	return (i);
@@ -114,8 +127,10 @@ double	special1(t_arg *arg, t_pts *pts, double x, double y)
 	double	tmp2;
 	double	i;
 
-	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posx;
-    pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z * (double)arg->sizex) + arg->posy; 
+	pts->c_r = (x - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posx;
+	pts->c_i = (y - (double)arg->sizex / 2) / (0.5 * arg->z
+	* (double)arg->sizex) + arg->posy;
 	while (pts->i < arg->i)
 	{
 		tmp1 = pts->z_r * pts->z_r - pts->z_i * pts->z_i - pts->c_r;
@@ -127,7 +142,8 @@ double	special1(t_arg *arg, t_pts *pts, double x, double y)
 			break ;
 	}
 	if (arg->pretty == 1)
-		i = (double)pts->i + 1.0 - log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
+		i = (double)pts->i + 1.0
+		- log(log(sqrt(pts->z_r * pts->z_r + pts->z_i * pts->z_i))) / log(2);
 	else
 		i = pts->i;
 	return (i);

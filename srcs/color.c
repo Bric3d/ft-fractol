@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 18:05:49 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/13 12:37:12 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/15 13:44:59 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 static int	color_scale_c(double d, double freq, double phase)
 {
-	return ((int)(127.5 * (1 - cos(freq * 2 * M_PI* (d + phase)))));
+	return ((int)(127.5 * (1 - cos(freq * 2 * M_PI * (d + phase)))));
 }
-
 
 static int	color_scale(double d, t_arg *arg)
 {
 	int res;
+
 	if (d < 0 || d > 1)
 		return (0);
 	res = 0;
@@ -40,7 +40,7 @@ static int	colorcarpet(double x)
 		return (0xFFFFFF);
 }
 
-int	ft_color(double x, int max, t_arg arg)
+int			ft_color(double x, int max, t_arg arg)
 {
 	max = max - 1;
 	if (arg.fract == 5)
@@ -48,7 +48,7 @@ int	ft_color(double x, int max, t_arg arg)
 	if (x >= max)
 		return (0);
 	if (x <= 0)
-		x = 0.1; 
+		x = 0.1;
 	x = ((int)x % 20) + (x - (int)x);
 	x /= 20;
 	return (color_scale(x, &arg));

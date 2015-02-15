@@ -6,7 +6,7 @@
 /*   By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/02/07 14:53:10 by bbecker           #+#    #+#             */
-/*   Updated: 2015/02/07 15:12:42 by bbecker          ###   ########.fr       */
+/*   Updated: 2015/02/15 13:45:38 by bbecker          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	ft_error2(int error, char *cause)
 		ft_putendl("wrong size, unsing default instead");
 }
 
-void	ft_error(char *name, int error, char *cause)
+void		ft_error(char *name, int error, char *cause)
 {
 	if (name)
 	{

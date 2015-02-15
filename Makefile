@@ -6,7 +6,7 @@
 #    By: bbecker <bbecker@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/12/08 15:08:34 by bbecker           #+#    #+#              #
-#    Updated: 2015/02/13 16:36:25 by bbecker          ###   ########.fr        #
+#    Updated: 2015/02/15 16:27:53 by bbecker          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,18 +22,26 @@ TOMAKE =	$(F)main.c					\
 			$(F)color.c					\
 			$(F)tools.c					\
 			$(F)random.c				\
+			$(F)img.c					\
+			$(F)init.c					\
 			$(F)fractals.c				\
 			$(F)fractals2.c				\
+			$(F)keys.c					\
+			$(F)keys2.c					\
 			$(F)mouse_hook.c			\
 			$(F)error.c
 
 
 TOLIB	=	main.o						\
 			error.o						\
+			img.o						\
+			init.o						\
 			fractals.o					\
 			fractals2.o					\
 			tools.o						\
 			random.o					\
+			keys.o						\
+			keys2.o						\
 			mouse_hook.o				\
 			color.o
 
@@ -68,16 +76,16 @@ fclean: clean
 re: fclean all
 
 help:
-	@echo "--------------------\n\n\
+	@echo "------------------------------------------------------\n\n\
 	Compile with all\nUsage : ./fractol X Y\n\
 	Max X = 2560\nMax Y = 1350\n\
-	\n--------------------\n\n\
+	\n------------------------------------------------------\n\n\
 	Zoom with |+| and |-|\n\
 	Toogle smoothing with |page up|, |page down| and |P|\nR G and B can be\
 	 choosed with the pad\nChoose the fractals with |1| to |9|\n\
 	Toogle precise tuning of values with |home| and |end|\n\
 	Turn mouse on and off with |m|\n\
 	Generate a random color with |space|\n\
-	 \n--------------------"
+	 \n------------------------------------------------------"
 
 .PHONY: fclean clean all test help
